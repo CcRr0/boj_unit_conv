@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "boj_unit_conv",
-    "version": "1.0",
+    "version": "0.0.0",
     "action": {
         "default_icon": {
             "48": "/icon/48.png"
