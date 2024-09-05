@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "scripts": {
+        "export": "cd src && zip -0 -r ../export/boj_unit_conv.zip *"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.270"
+    }
+}

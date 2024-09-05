@@ -1,0 +1,40 @@
+{
+    "manifest_version": 3,
+    "name": "boj_unit_conv",
+    "version": "1.0",
+    "action": {
+        "default_icon": {
+            "48": "/icon/48.png"
+        }
+    },
+    "icons": {
+        "48": "/icon/48.png"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.acmicpc.net/status*"
+            ],
+            "js": [
+                "/content_scripts/status.js"
+            ],
+            "css": [
+                "/content_scripts/setter.css"
+            ]
+        },
+        {
+            "matches": [
+                "https://www.acmicpc.net/problem/status/*"
+            ],
+            "js": [
+                "/content_scripts/status.js"
+            ],
+            "css": [
+                "/content_scripts/setter.css"
+            ]
+        }
+    ]
+}
