@@ -29,9 +29,9 @@ async function main() {
     let timeVals = Array.from(timeTds).map((td) => td.firstChild ? Number(td.firstChild.textContent) : null);
 
     timeTds.forEach((td) => {
-        if(!td.firstChild) return;
-        td.appendChild(timeUnitEl.cloneNode(true));
+        if(td.firstChild) td.appendChild(timeUnitEl.cloneNode(true));
     });
+
     displayMemory();
     displayTime();
 
@@ -41,6 +41,7 @@ async function main() {
         (new MutationObserver((mutationsList, observer) => {
             for(const mutation of mutationsList) {
                 if(mutation.type === "childList") {
+                    observer.disconnect();
                     const submitIdx = Number(mutation.target.parentElement.querySelector("td").textContent);
                     const memoryVal = Number(mutation.target.firstChild.textContent);
                     memoryVals[topSubmitIdx - submitIdx] = memoryVal;
@@ -48,13 +49,13 @@ async function main() {
                         mutation.target.querySelector(".kb-text").className = "mb-text";
                         mutation.target.firstChild.textContent = (memoryVal / 1024).toFixed(memoryUnit);
                     }
-                    observer.disconnect();
                 }
             }
         })).observe(memoryTd, { childList: true, subtree: false });
         (new MutationObserver((mutationsList, observer) => {
             for(const mutation of mutationsList) {
                 if(mutation.type === "childList") {
+                    observer.disconnect();
                     mutation.target.querySelector(".ms-text").remove();
                     const submitIdx = Number(mutation.target.parentElement.querySelector("td").textContent);
                     const timeVal = Number(mutation.target.firstChild.textContent);
@@ -67,7 +68,6 @@ async function main() {
                         timeUnitElCopy.textContent = " ms";
                     }
                     mutation.target.appendChild(timeUnitElCopy);
-                    observer.disconnect();
                 }
             }
         })).observe(timeTd, { childList: true, subtree: false });
@@ -76,7 +76,7 @@ async function main() {
     const memoryUnitSetter = document.createElement("a");
     memoryUnitSetter.className = "memoryUnitSetter";
     memoryUnitSetter.style.cursor = "pointer";
-    memoryUnitSetter.textContent = ` ${memoryUnit ? `MB .${memoryUnit}` : "KB"}`;
+    memoryUnitSetter.textContent = `${memoryUnit ? `MB .${memoryUnit}` : "KB"}`;
     memoryUnitSetter.addEventListener("mousedown", (e) => e.preventDefault());
     memoryUnitSetter.addEventListener("click", () => {
         memoryUnit = (memoryUnit + 1) % 4;
@@ -88,7 +88,7 @@ async function main() {
     const timeUnitSetter = document.createElement("a");
     timeUnitSetter.className = "timeUnitSetter";
     timeUnitSetter.style.cursor = "pointer";
-    timeUnitSetter.textContent = ` ${timeUnit ? `s .${timeUnit}` : "ms"}`;
+    timeUnitSetter.textContent = `${timeUnit ? `s .${timeUnit}` : "ms"}`;
     timeUnitSetter.addEventListener("mousedown", (e) => e.preventDefault());
     timeUnitSetter.addEventListener("click", () => {
         timeUnit = (timeUnit + 1) % 4;
@@ -97,7 +97,9 @@ async function main() {
         displayTime();
     });
 
+    memoryTh.appendChild(document.createTextNode(" "));
     memoryTh.appendChild(memoryUnitSetter);
+    timeTh.appendChild(document.createTextNode(" "));
     timeTh.appendChild(timeUnitSetter);
 
     function displayMemory() {
